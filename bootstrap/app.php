@@ -27,6 +27,8 @@ $app->withFacades();
 
 $app->withEloquent();
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -61,6 +63,8 @@ $app->singleton(
 
 $app->configure('app');
 
+$app->configure('filesystems'); // Enable file system handling
+
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -91,6 +95,7 @@ $app->routeMiddleware([
 |
 */
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+$app->register(Illuminate\Validation\ValidationServiceProvider::class);
 
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
@@ -106,6 +111,14 @@ $app->register(App\Providers\EventServiceProvider::class);
 | can respond to, as well as the controllers that may handle them.
 |
 */
+
+if (!function_exists('public_path')) {
+    function public_path($path = '')
+    {
+        return app()->basePath('public') . ($path ? '/' . $path : $path);
+    }
+}
+
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
